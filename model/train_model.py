@@ -2,6 +2,7 @@ import os
 import re
 import pandas as pd
 import pickle
+import numpy as np
 from sklearn.pipeline import Pipeline
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.linear_model import LogisticRegression
@@ -109,3 +110,85 @@ def train_and_save_model():
     print("[ERRAM] Model saved.")
 
     return pipeline
+
+LABEL_COLORS = {
+    0: "green",
+    1: "orange",
+    2: "red"
+}
+
+LABEL_DESCRIPTIONS = {
+    0: "No significant emotional distress detected. You seem to be doing well. Keep maintaining healthy habits and positive connections!",
+    1: "Some signs of stress, anxiety, or emotional strain detected. Consider talking to a trusted friend, family member, or counselor for support.",
+    2: "High emotional distress detected. We strongly encourage you to speak with a mental health professional or a trusted adult. You are not alone — help is available."
+}
+
+LABEL_TIPS = {
+    0: [
+        "Keep up your positive routines.",
+        "Stay connected with friends and family.",
+        "Regular exercise helps maintain good mental health."
+    ],
+    1: [
+        "Try journaling your thoughts for clarity.",
+        "Consider a short break from screens and social media.",
+        "Talk to someone you trust about how you're feeling."
+    ],
+    2: [
+        "Please reach out to a mental health professional.",
+        "Contact iCall helpline: 9152987821 (India).",
+        "You don't have to face this alone — support is available."
+    ]
+}
+
+
+def load_model():
+    """
+    Loads the trained model from disk.
+    If model doesn't exist yet, trains it first automatically.
+    """
+    if not os.path.exists(MODEL_PATH):
+        return train_and_save_model()
+    with open(MODEL_PATH, "rb") as f:
+        return pickle.load(f)
+
+
+def predict_risk(text: str) -> dict:
+    """
+    Takes raw user input text and returns risk assessment.
+    Steps:
+    1. Clean the text
+    2. Run through TF-IDF + Logistic Regression model
+    3. Get probabilities for Low, Medium, High
+    4. If confidence is low, add a warning (handles sarcasm/ambiguity)
+    5. Return everything as a dictionary for Flask to send to frontend
+    """
+    model   = load_model()
+    cleaned = clean_text(text)
+
+    label_id   = int(model.predict([cleaned])[0])
+    proba      = model.predict_proba([cleaned])[0]
+    confidence = round(float(np.max(proba)) * 100, 1)
+
+    # If model is not confident enough, warn the user
+    # This handles cases like sarcasm or ambiguous text
+    warning = None
+    if confidence < 55:
+        warning = (
+            "Low confidence prediction — your message may be ambiguous, "
+            "sarcastic, or context-dependent. Result may not be fully accurate."
+        )
+
+    return {
+        "risk_level":    LABELS[label_id],
+        "risk_id":       label_id,
+        "color":         LABEL_COLORS[label_id],
+        "confidence":    confidence,
+        "description":   LABEL_DESCRIPTIONS[label_id],
+        "tips":          LABEL_TIPS[label_id],
+        "warning":       warning,
+        "probabilities": {
+            LABELS[i]: round(float(p) * 100, 1)
+            for i, p in enumerate(proba)
+        }
+    }
