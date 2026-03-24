@@ -1,0 +1,78 @@
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+    --primary:      #2d6a4f;
+    --primary-dark: #1b4332;
+    --accent:       #52b788;
+    --bg:           #f0f4f2;
+    --card:         #ffffff;
+    --text:         #1a2e22;
+    --muted:        #5a7060;
+    --border:       #cfe0d5;
+    --green:        #2d6a4f;
+    --green-bg:     #d8f3dc;
+    --green-border: #95d5b2;
+    --orange:       #b5590a;
+    --orange-bg:    #fef3e2;
+    --orange-border:#f4a261;
+    --red:          #9b2226;
+    --red-bg:       #fde8e9;
+    --red-border:   #e76f51;
+    --radius:       14px;
+    --shadow:       0 4px 24px rgba(45,106,79,0.10);
+}
+
+body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+h1, h2, h3 { font-family: 'DM Serif Display', serif; }
+em { font-style: italic; color: var(--accent); }
+
+nav {
+    background: var(--primary-dark);
+    padding: 0.9rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky; top: 0; z-index: 100;
+}
+.nav-brand { color: white; font-family: 'DM Serif Display', serif;
+             font-size: 1.3rem; display: flex; align-items: center; gap: 0.5rem; }
+.nav-links a { color: rgba(255,255,255,0.7); text-decoration: none;
+               padding: 0.4rem 1rem; border-radius: 999px; font-size: 0.9rem; }
+.nav-links a:hover,
+.nav-links a.active { color: white; background: rgba(255,255,255,0.18); }
+
+.hero {
+    background: var(--primary-dark);
+    color: white;
+    padding: 4rem 2rem 5rem;
+    position: relative; overflow: hidden;
+}
+.hero-inner { max-width: 680px; margin: 0 auto; text-align: center; }
+.hero-tag {
+    display: inline-block; background: rgba(255,255,255,0.12);
+    color: #95d5b2; font-size: 0.78rem; font-weight: 600;
+    letter-spacing: 1.5px; text-transform: uppercase;
+    padding: 0.35rem 1rem; border-radius: 999px; margin-bottom: 1.25rem;
+}
+.hero h1 { color: white; font-size: clamp(2rem,5vw,3rem); margin-bottom: 1rem; }
+.hero p  { font-size: 1.05rem; opacity: 0.8; }
+
+.container { max-width: 740px; margin: 0 auto; padding: 2.5rem 1.25rem; flex: 1; }
+
+.card {
+    background: var(--card); border-radius: var(--radius);
+    box-shadow: var(--shadow); padding: 2rem; margin-bottom: 1.5rem;
+    border: 1px solid var(--border);
+}
+
+footer { background: var(--primary-dark); color: rgba(255,255,255,0.5);
+         text-align: center; padding: 1.1rem; font-size: 0.8rem; }
+
+.hidden { display: none !important; }
