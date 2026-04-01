@@ -1,12 +1,10 @@
 import os
 import re
-import pandas as pd
 import pickle
 import numpy as np
 from sklearn.pipeline import Pipeline
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.linear_model import LogisticRegression
-from sklearn.model_selection import train_test_split
 from sklearn.metrics import classification_report, accuracy_score
 
 DATA_DIR   = os.path.join(os.path.dirname(__file__), "..", "data")
@@ -27,15 +25,14 @@ EMOTION_TO_RISK = {
 LABELS = {0: "Low", 1: "Medium", 2: "High"}
 
 
-def load_kaggle_data():
+def load_kaggle_data(filenames):
     """
-    Loads Kaggle emotions dataset from /data folder.
+    Loads Kaggle emotions dataset files from /data folder.
     Each line format: text;emotion_label
-    Combines train.txt and val.txt for maximum training data.
     """
     texts, labels = [], []
 
-    for filename in ["train.txt", "val.txt"]:
+    for filename in filenames:
         path = os.path.join(DATA_DIR, filename)
         if not os.path.exists(path):
             print(f"[ERRAM] {filename} not found, skipping.")
@@ -52,7 +49,8 @@ def load_kaggle_data():
                     texts.append(text.strip())
                     labels.append(EMOTION_TO_RISK[emotion])
 
-    print(f"[ERRAM] Loaded {len(texts)} samples from dataset.")
+    joined_files = ", ".join(filenames)
+    print(f"[ERRAM] Loaded {len(texts)} samples from: {joined_files}.")
     return texts, labels
 
 def clean_text(text: str) -> str:
@@ -68,18 +66,17 @@ def clean_text(text: str) -> str:
 
 def train_and_save_model():
     """
-    Trains TF-IDF + Logistic Regression pipeline on Kaggle emotions dataset.
-    Prints accuracy and saves trained model to erram_model.pkl
+    Trains TF-IDF + Logistic Regression pipeline on train+val data.
+    Evaluates on separate test.txt holdout set and saves metrics.
     """
-    texts, labels = load_kaggle_data()
-    texts = [clean_text(t) for t in texts]
+    X_train, y_train = load_kaggle_data(["train.txt", "val.txt"])
+    X_test, y_test = load_kaggle_data(["test.txt"])
 
-    X_train, X_val, y_train, y_val = train_test_split(
-        texts, labels,
-        test_size=0.15,
-        random_state=42,
-        stratify=labels
-    )
+    X_train = [clean_text(t) for t in X_train]
+    X_test = [clean_text(t) for t in X_test]
+
+    if not X_train or not X_test:
+        raise ValueError("Training or test data is empty. Check data/train.txt, data/val.txt, and data/test.txt")
 
     pipeline = Pipeline([
         ("tfidf", TfidfVectorizer(
@@ -98,16 +95,32 @@ def train_and_save_model():
 
     pipeline.fit(X_train, y_train)
 
-    y_pred = pipeline.predict(X_val)
-    print(f"[ERRAM] Accuracy: {accuracy_score(y_val, y_pred)*100:.2f}%")
-    print(classification_report(
-        y_val, y_pred,
+    y_pred = pipeline.predict(X_test)
+    accuracy = accuracy_score(y_test, y_pred) * 100
+    report = classification_report(
+        y_test, y_pred,
         target_names=["Low", "Medium", "High"]
-    ))
+    )
+    
+    # Print to console
+    print(f"[ERRAM] Accuracy: {accuracy:.2f}%")
+    print(report)
 
+    # Save model
     with open(MODEL_PATH, "wb") as f:
         pickle.dump(pipeline, f)
     print("[ERRAM] Model saved.")
+
+    # Save training results to file
+    results_path = os.path.join(os.path.dirname(__file__), "training_results.txt")
+    with open(results_path, "w") as f:
+        f.write("=== ERRAM Model Training Results ===\n")
+        f.write(f"Training samples: {len(X_train)}\n")
+        f.write(f"Test samples: {len(X_test)}\n")
+        f.write(f"\nTest Accuracy: {accuracy:.2f}%\n\n")
+        f.write("Test Classification Report:\n")
+        f.write(report)
+    print(f"[ERRAM] Results saved to {results_path}")
 
     return pipeline
 
@@ -192,3 +205,7 @@ def predict_risk(text: str) -> dict:
             for i, p in enumerate(proba)
         }
     }
+
+
+if __name__ == "__main__":
+    train_and_save_model()
