@@ -16,10 +16,10 @@ MODEL_PATH = os.path.join(os.path.dirname(__file__), "erram_model.pkl")
 EMOTION_TO_RISK = {
     "joy":      0,   # Low
     "love":     0,   # Low
-    "surprise": 0,   # Low
-    "sadness":  1,   # Medium
-    "fear":     1,   # Medium
-    "anger":    2,   # High
+    "surprise": 1,   # Medium (surprise can be negative)
+    "sadness":  2,   # High (sadness is strong distress signal)
+    "fear":     2,   # High (fear is strong distress signal)
+    "anger":    1,   # Medium
 }
 
 LABELS = {0: "Low", 1: "Medium", 2: "High"}
@@ -183,28 +183,18 @@ def predict_risk(text: str) -> dict:
     proba      = model.predict_proba([cleaned])[0]
     confidence = round(float(np.max(proba)) * 100, 1)
 
-    # If model is not confident enough, warn the user
-    # This handles cases like sarcasm or ambiguous text
-    warning = None
-    if confidence < 55:
-        warning = (
-            "Low confidence prediction — your message may be ambiguous, "
-            "sarcastic, or context-dependent. Result may not be fully accurate."
-        )
-
     return {
-        "risk_level":    LABELS[label_id],
-        "risk_id":       label_id,
-        "color":         LABEL_COLORS[label_id],
-        "confidence":    confidence,
-        "description":   LABEL_DESCRIPTIONS[label_id],
-        "tips":          LABEL_TIPS[label_id],
-        "warning":       warning,
-        "probabilities": {
-            LABELS[i]: round(float(p) * 100, 1)
-            for i, p in enumerate(proba)
-        }
+    "risk_level":    LABELS[label_id],
+    "risk_id":       label_id,
+    "color":         LABEL_COLORS[label_id],
+    "confidence":    confidence,
+    "description":   LABEL_DESCRIPTIONS[label_id],
+    "tips":          LABEL_TIPS[label_id],
+    "probabilities": {
+        LABELS[i]: round(float(p) * 100, 1)
+        for i, p in enumerate(proba)
     }
+}
 
 
 if __name__ == "__main__":
