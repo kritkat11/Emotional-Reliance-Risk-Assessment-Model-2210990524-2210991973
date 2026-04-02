@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>ERRAM – Emotional Risk Assessment</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com"/>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}"/>
+</head>
+<body>
+<nav>
+    <div class="nav-brand">
+        <span class="nav-icon">🧠</span>
+        <span>ERRAM</span>
+    </div>
+    <div class="nav-links">
+        <a href="/" class="active">Assess</a>
+        <a href="/about">About</a>
+    </div>
+</nav>
+<header class="hero">
+    <div class="hero-inner">
+        <div class="hero-tag">AI-Powered · NLP · Mental Health</div>
+        <h1>Emotional Reliance<br/><em>Risk Assessment</em></h1>
+        <p>Type how you're feeling — the AI will assess your emotional risk level.</p>
+    </div>
+</header>
+<main class="container">
+    <div class="card input-card">
+    <div class="card-header">
+        <div class="card-icon">✍️</div>
+        <div>
+            <h2>How are you feeling?</h2>
+            <p class="card-sub">Type freely — the more you write, the more accurate.</p>
+        </div>
+    </div>
+    <textarea id="userInput"
+        placeholder="e.g. I've been feeling really stressed and overwhelmed lately..."
+        rows="5"></textarea>
+    <div class="input-footer">
+        <span class="char-count" id="charCount">0 characters</span>
+        <span class="hint">Ctrl + Enter to submit</span>
+    </div>
+    <button id="analyzeBtn" onclick="analyzeRisk()">
+        <span id="btnText">Analyze Risk</span>
+        <span id="spinner" class="spinner hidden"></span>
+    </button>
+</div>
+
+<div id="warningBox" class="warning-box hidden">
+    <span>⚠️</span>
+    <p id="warningText"></p>
+</div>
+
+<div id="resultCard" class="card result-card hidden">
+    <div class="result-header">
+        <div class="risk-badge" id="riskBadge"></div>
+        <div class="result-meta">
+            <p class="confidence-label">Model Confidence</p>
+            <div class="confidence-bar-wrap">
+                <div class="confidence-track">
+                    <div class="confidence-fill" id="confidenceFill"></div>
+                </div>
+                <span class="confidence-val" id="confidenceVal"></span>
+            </div>
+        </div>
+    </div>
+    <p class="description" id="descriptionText"></p>
+    <div class="prob-section">
+        <h4>Risk Level Breakdown</h4>
+        <div class="prob-bar-group">
+            <div class="prob-label"><span class="dot dot-low"></span> Low</div>
+            <div class="prob-track"><div class="prob-fill low" id="barLow"></div></div>
+            <span class="prob-val" id="valLow"></span>
+        </div>
+        <div class="prob-bar-group">
+            <div class="prob-label"><span class="dot dot-medium"></span> Medium</div>
+            <div class="prob-track"><div class="prob-fill medium" id="barMedium"></div></div>
+            <span class="prob-val" id="valMedium"></span>
+        </div>
+        <div class="prob-bar-group">
+            <div class="prob-label"><span class="dot dot-high"></span> High</div>
+            <div class="prob-track"><div class="prob-fill high" id="barHigh"></div></div>
+            <span class="prob-val" id="valHigh"></span>
+        </div>
+    </div>
+    <div class="tips-section">
+        <h4>Suggestions</h4>
+        <ul id="tipsList"></ul>
+    </div>
+    <div class="disclaimer">
+        <span>⚠️</span>
+        <p>For <strong>educational use only</strong>. If in crisis contact
+           <strong>iCall: 9152987821</strong></p>
+    </div>
+</div>
+
+<div id="errorCard" class="error-card hidden">
+    <span>❌</span>
+    <p id="errorText"></p>
+</div>
+<script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</main>
+<footer>
+    <p>ERRAM © 2025 · Chitkara University</p>
+</footer>
+</body>
+</html>

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>About – ERRAM</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com"/>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}"/>
+</head>
+<body>
+<nav>
+    <div class="nav-brand">
+        <span class="nav-icon">🧠</span>
+        <span>ERRAM</span>
+    </div>
+    <div class="nav-links">
+        <a href="/">Assess</a>
+        <a href="/about" class="active">About</a>
+    </div>
+</nav>
+<header class="hero">
+    <div class="hero-inner">
+        <div class="hero-tag">Project Documentation</div>
+        <h1>About <em>ERRAM</em></h1>
+        <p>Responsible Usage Monitoring of Conversational AI using
+           Emotional Reliance Risk Assessment Model</p>
+    </div>
+</header>
+<main class="container">
+    <div class="card">
+        <h2 style="color:#2d6a4f;margin-bottom:1rem">Project Overview</h2>
+        <p><strong>Institution:</strong> Chitkara University, Rajpura, Punjab</p>
+        <p style="margin-top:0.5rem"><strong>Dataset:</strong>
+            Emotions Dataset for NLP —
+            <a href="https://www.kaggle.com/datasets/praveengovi/emotions-dataset-for-nlp"
+               target="_blank" style="color:#52b788">View on Kaggle ↗</a>
+        </p>
+
+        <h3 style="margin:1.5rem 0 0.5rem">How It Works</h3>
+        <ol style="padding-left:1.5rem;color:#5a7060;line-height:2">
+            <li>User enters text describing their feelings</li>
+            <li>Text is cleaned — lowercased, punctuation removed</li>
+            <li>TF-IDF converts text into 8,000 numerical features</li>
+            <li>Logistic Regression predicts Low, Medium or High risk</li>
+            <li>If confidence is below 55%, a warning is shown</li>
+        </ol>
+
+        <h3 style="margin:1.5rem 0 0.5rem">Risk Categories</h3>
+        <div style="display:flex;flex-direction:column;gap:0.75rem;margin-top:0.5rem">
+            <div style="background:#d8f3dc;border-left:4px solid #2d6a4f;padding:0.85rem 1rem;border-radius:0 8px 8px 0">
+                <strong>🟢 Low Risk</strong>
+                <p style="font-size:0.9rem;color:#5a7060;margin-top:0.25rem">Normal, positive or neutral messages. No distress detected.</p>
+            </div>
+            <div style="background:#fef3e2;border-left:4px solid #f4a261;padding:0.85rem 1rem;border-radius:0 8px 8px 0">
+                <strong>🟠 Medium Risk</strong>
+                <p style="font-size:0.9rem;color:#5a7060;margin-top:0.25rem">Signs of stress, anxiety or loneliness detected.</p>
+            </div>
+            <div style="background:#fde8e9;border-left:4px solid #e76f51;padding:0.85rem 1rem;border-radius:0 8px 8px 0">
+                <strong>🔴 High Risk</strong>
+                <p style="font-size:0.9rem;color:#5a7060;margin-top:0.25rem">Severe distress or hopelessness. Immediate support recommended.</p>
+            </div>
+        </div>
+
+        <h3 style="margin:1.5rem 0 0.5rem">Technology Stack</h3>
+        <p style="color:#5a7060;line-height:2">
+            Python · Flask · scikit-learn · TF-IDF · Logistic Regression · pandas · HTML5 · CSS3 · JavaScript
+        </p>
+
+        <h3 style="margin:1.5rem 0 0.5rem">Team</h3>
+        <table style="width:100%;border-collapse:collapse">
+            <thead>
+                <tr style="background:#f0f4f2">
+                    <th style="padding:0.6rem 1rem;border:1px solid #cfe0d5;text-align:left">Name</th>
+                    <th style="padding:0.6rem 1rem;border:1px solid #cfe0d5;text-align:left">Contribution</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td style="padding:0.6rem 1rem;border:1px solid #cfe0d5">Kritika Bansal</td>
+                    <td style="padding:0.6rem 1rem;border:1px solid #cfe0d5">Dataset loading · Model training · Flask routes</td>
+                </tr>
+                <tr>
+                    <td style="padding:0.6rem 1rem;border:1px solid #cfe0d5">Niharika Kapoor</td>
+                    <td style="padding:0.6rem 1rem;border:1px solid #cfe0d5">predict_risk function · HTML templates · CSS · JavaScript</td>
+                </tr>
+                <tr>
+                    <td style="padding:0.6rem 1rem;border:1px solid #cfe0d5">Lalit K. Sharma</td>
+                    <td style="padding:0.6rem 1rem;border:1px solid #cfe0d5">Mentor / Supervisor</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</main>
+<footer>
+    <p>ERRAM © 2025 · Chitkara University</p>
+</footer>
+</body>
+</html>
