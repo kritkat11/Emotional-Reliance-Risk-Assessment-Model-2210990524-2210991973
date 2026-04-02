@@ -64,6 +64,44 @@ MEDIUM_RISK_KEYWORDS = [
 
 LABELS = {0: "Low", 1: "Medium", 2: "High"}
 
+# Fallback data used if Kaggle files are missing
+# Ensures app always runs even without dataset
+FALLBACK_DATA = [
+    # Low Risk
+    ("i had a great day today", 0),
+    ("feeling happy and content", 0),
+    ("i love spending time with my friends", 0),
+    ("everything is going really well", 0),
+    ("i feel peaceful and calm today", 0),
+    ("feeling grateful for everything i have", 0),
+    ("i am proud of what i accomplished", 0),
+    ("feeling joyful and energetic", 0),
+    ("i feel positive about my future", 0),
+    ("feeling refreshed after a good sleep", 0),
+    # Medium Risk
+    ("i have been feeling lonely lately", 1),
+    ("work is really stressful this week", 1),
+    ("i feel like nobody understands me", 1),
+    ("i have been overthinking a lot recently", 1),
+    ("i feel disconnected from everyone around me", 1),
+    ("i get anxious in social situations", 1),
+    ("i don't have many friends to talk to", 1),
+    ("i feel stressed and don't know how to handle it", 1),
+    ("i am scared about what might happen next", 1),
+    ("i feel like a burden to people sometimes", 1),
+    # High Risk
+    ("i feel like there is no point in anything anymore", 2),
+    ("i don't want to be here anymore", 2),
+    ("nobody would care if i disappeared", 2),
+    ("i feel completely hopeless about my future", 2),
+    ("i have been thinking about harming myself", 2),
+    ("i can't go on like this anymore", 2),
+    ("i feel like ending everything", 2),
+    ("i am worthless and i know it", 2),
+    ("i don't want to live this life anymore", 2),
+    ("everyone would be better off without me", 2),
+]
+
 
 def load_kaggle_data(filenames):
     """
@@ -90,8 +128,14 @@ def load_kaggle_data(filenames):
                     labels.append(EMOTION_TO_RISK[emotion])
 
     joined_files = ", ".join(filenames)
-    print(f"[ERRAM] Loaded {len(texts)} samples from: {joined_files}.")
-    return texts, labels
+    if texts:
+        print(f"[ERRAM] Loaded {len(texts)} samples from: {joined_files}.")
+        return texts, labels
+
+    # Fallback if Kaggle files not found
+    print("[ERRAM] Kaggle data not found. Using built-in fallback dataset.")
+    fb_texts, fb_labels = zip(*FALLBACK_DATA)
+    return list(fb_texts), list(fb_labels)
 
 def clean_text(text: str) -> str:
     """
@@ -195,6 +239,37 @@ LABEL_TIPS = {
     ]
 }
 
+def evaluate_on_test(pipeline):
+    """
+    Evaluates trained model on Kaggle test.txt if available.
+    Prints final accuracy and classification report.
+    """
+    path = os.path.join(DATA_DIR, "test.txt")
+    if not os.path.exists(path):
+        return
+
+    texts, labels = [], []
+    with open(path, "r", encoding="utf-8") as f:
+        for line in f:
+            line = line.strip()
+            if ";" not in line:
+                continue
+            text, emotion = line.rsplit(";", 1)
+            emotion = emotion.strip().lower()
+            if emotion in EMOTION_TO_RISK:
+                texts.append(clean_text(text.strip()))
+                labels.append(EMOTION_TO_RISK[emotion])
+
+    if not texts:
+        return
+
+    from sklearn.metrics import accuracy_score
+    preds = pipeline.predict(texts)
+    acc   = accuracy_score(labels, preds)
+    print(f"\n[ERRAM] ── Test Set Evaluation ──")
+    print(f"[ERRAM] Test Accuracy: {acc*100:.2f}%")
+    print(classification_report(labels, preds,
+          target_names=["Low", "Medium", "High"]))
 
 def load_model():
     """
