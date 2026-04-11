@@ -1,0 +1,11 @@
+{
+  "name": "emotional-risk-detector-ai",
+  "version": "1.0.0",
+  "main": "app.py",
+  "scripts": {
+    "start": "python3 app.py"
+  },
+  "engines": {
+    "python": ">=3.10.0"
+  }
+}
