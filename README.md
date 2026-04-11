@@ -85,6 +85,8 @@ ERRAM is an AI-powered web application for assessing emotional risk levels from 
 - **static/js/main.js:** Handles user input, AJAX requests, and dynamic UI updates.
 - **static/css/style.css:** Responsive, accessible styling.
 
+**Live Demo:** The app is deployed as a live website on Render: [https://emotional-risk-detector-ai-1.onrender.com/](https://emotional-risk-detector-ai-1.onrender.com/)
+
 ## Contributors
 
 - Kritika Bansal
