@@ -2,15 +2,15 @@
 Training samples: 18000
 Test samples: 2000
 
-Test Accuracy: 93.60%
+Test Accuracy: 96.40%
 
 Test Classification Report:
               precision    recall  f1-score   support
 
-         Low       0.94      0.98      0.96       920
-      Medium       0.93      0.94      0.94       805
-        High       0.92      0.78      0.85       275
+         Low       0.97      0.95      0.96       920
+      Medium       0.96      0.97      0.97      1080
+        High       0.00      0.00      0.00         0
 
-    accuracy                           0.94      2000
-   macro avg       0.93      0.90      0.91      2000
-weighted avg       0.94      0.94      0.93      2000
+    accuracy                           0.96      2000
+   macro avg       0.64      0.64      0.64      2000
+weighted avg       0.96      0.96      0.96      2000
