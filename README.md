@@ -1,5 +1,16 @@
 # ERRAM - Emotional Reliance Risk Assessment Model
 
+## Project Details
+
+- **Project Title:** ERRAM - Emotional Reliance Risk Assessment Model
+- **Project Type:** Academic project / Copyrighted submission
+- **Copyright:** © 2026. All rights reserved by the project team.
+- **Team Members:**
+  - Kritika Bansal — Roll No: 2210990524
+  - Niharika Kapoor — Roll No: 2210991973
+- **Mentor:** Lalit K. Sharma
+- **Current Status:** Prototype complete and deployed with working model training, risk assessment UI, and documentation. Ready for academic submission.
+
 ERRAM is an AI-powered web application for assessing emotional risk levels from free-form user input. It uses NLP and machine learning to analyze text and classify emotional risk as **Low**, **Medium**, or **High**, providing actionable suggestions and resources for mental health support.
 
 ## Features
@@ -37,23 +48,27 @@ ERRAM is an AI-powered web application for assessing emotional risk levels from 
 ## Quickstart
 
 1. **Clone the repository:**
+
    ```sh
    git clone <repo-url>
    cd emotional-risk-detector-ai
    ```
 
 2. **Set up the virtual environment and install dependencies:**
+
    ```sh
    cmdvenv\Scripts\activate.bat
    pip install -r requirements.txt
    ```
 
    Or manually:
+
    ```sh
    pip install flask scikit-learn pandas numpy
    ```
 
 3. **Train the model (if not already trained):**
+
    ```sh
    python model/train_model.py
    ```
